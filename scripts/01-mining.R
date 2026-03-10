@@ -93,25 +93,16 @@ for (country in countries) {
 #checking the new row for women 
 women_df <- bind_rows(all_women)
 glimpse(women_df)
-write_csv(women_df, "data_raw/meps_women_term9_by_country.csv")
+write_csv(women_df, "data_raw/meps_women_term10_by_country.csv")
 
-#df for Women parlamentary term 9 ----
+#df for Women all parlamentary ters ---- (Promt 9 ChatGPT)
 #Generating a Loop to get all Women form every country and generating directly a country variable
-# but only for the last parlamentary term (9)
 
-all_women <- list()
-
-countries <- c(
-  "BE","BG","CZ","DK","DE","EE","IE","EL","ES","FR","HR","IT",
-  "CY","LV","LT","LU","HU","MT","NL","AT","PL","PT","RO","SI",
-  "SK","FI","SE"
-)
 
 for (country in countries) {
   
   url <- paste0(
     "https://data.europarl.europa.eu/api/v2/meps?",
-    "parliamentary-term=9",
     "&gender=FEMALE",
     "&country-of-representation=", country,
     "&limit=500"
@@ -145,7 +136,9 @@ for (country in countries) {
   
   df$country <- country
   df$gender <- "FEMALE"
-  df$parliamentary_term <- 10
   all_women[[country]] <- df
 }
+women_df <- bind_rows(all_women)
+glimpse(women_df)
+write_csv(women_df, "data_raw/meps_women_allterms_by_country.csv")
 

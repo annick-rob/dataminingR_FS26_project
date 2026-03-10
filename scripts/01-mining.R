@@ -93,8 +93,59 @@ for (country in countries) {
 #checking the new row for women 
 women_df <- bind_rows(all_women)
 glimpse(women_df)
-write_csv(women_df, "data_raw/meps_women_term10_by_country.csv")
+write_csv(women_df, "data_raw/meps_women_term9_by_country.csv")
 
+#df for Women parlamentary term 9 ----
+#Generating a Loop to get all Women form every country and generating directly a country variable
+# but only for the last parlamentary term (9)
 
+all_women <- list()
 
+countries <- c(
+  "BE","BG","CZ","DK","DE","EE","IE","EL","ES","FR","HR","IT",
+  "CY","LV","LT","LU","HU","MT","NL","AT","PL","PT","RO","SI",
+  "SK","FI","SE"
+)
+
+for (country in countries) {
+  
+  url <- paste0(
+    "https://data.europarl.europa.eu/api/v2/meps?",
+    "parliamentary-term=9",
+    "&gender=FEMALE",
+    "&country-of-representation=", country,
+    "&limit=500"
+  )
+  
+  response <- GET(
+    url,
+    add_headers(
+      "User-Agent" = "mep-project-research-4.5.0",
+      "Accept" = "application/ld+json"
+    )
+  )
+  
+  cat("Country:", country, "- Status:", status_code(response), "\n")
+  if (status_code(response) != 200) next
+  txt <- content(response, as = "text", encoding = "UTF-8")
+  if (nchar(txt) == 0) next
+  
+  parsed <- tryCatch(
+    fromJSON(txt, flatten = TRUE),
+    error = function(e) NULL
+  )
+  
+  if (is.null(parsed)) next
+  if (is.null(parsed$data)) next
+  if (length(parsed$data) == 0) next
+  
+  df <- as.data.frame(parsed$data)
+  
+  if (nrow(df) == 0) next
+  
+  df$country <- country
+  df$gender <- "FEMALE"
+  df$parliamentary_term <- 10
+  all_women[[country]] <- df
+}
 

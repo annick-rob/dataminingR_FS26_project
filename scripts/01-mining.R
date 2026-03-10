@@ -142,3 +142,70 @@ women_df <- bind_rows(all_women)
 glimpse(women_df)
 write_csv(women_df, "data_raw/meps_women_allterms_by_country.csv")
 
+
+#trying to get the political group as well (Promt10-13  ChatGPT)----
+
+countries <- c(
+  "BE","BG","CZ","DK","DE","EE","IE","EL","ES","FR","HR","IT",
+  "CY","LV","LT","LU","HU","MT","NL","AT","PL","PT","RO","SI",
+  "SK","FI","SE"
+)
+
+groups <- c(
+  "EPP", "S&D", "PfE", "ECR", "Renew", "Greens/EFA", "The Left", "ESN", "NI"
+)
+
+all_women <- list()
+
+for (country in countries) {
+  for (group in groups) {
+    
+    url <- paste0(
+      "https://data.europarl.europa.eu/api/v2/meps?",
+      "parliamentary-term=10",
+      "&gender=FEMALE",
+      "&country-of-representation=", URLencode(country, reserved = TRUE),
+      "&political-group=", URLencode(group, reserved = TRUE),
+      "&limit=500"
+    )
+    
+    response <- GET(
+      url,
+      add_headers(
+        "User-Agent" = "mep-project-research-4.5.0",
+        "Accept" = "application/ld+json"
+      )
+    )
+    
+    if (status_code(response) != 200) next
+    
+    txt <- content(response, as = "text", encoding = "UTF-8")
+    if (nchar(txt) == 0) next
+    
+    parsed <- tryCatch(
+      fromJSON(txt, flatten = TRUE),
+      error = function(e) NULL
+    )
+    
+    if (is.null(parsed) || is.null(parsed$data) || length(parsed$data) == 0) next
+    
+    df <- as.data.frame(parsed$data)
+    if (nrow(df) == 0) next
+    
+    df$country <- country
+    df$political_group <- group
+    df$gender <- "FEMALE"
+    df$parliamentary_term <- 10
+    
+    all_women[[paste(country, group, sep = "_")]] <- df
+  }
+}
+
+women_df <- bind_rows(all_women)
+
+glimpse(women_df)
+write_csv(women_df, "data_raw/meps_women_term10_country_group.csv")
+
+
+
+

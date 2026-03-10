@@ -206,6 +206,94 @@ women_df <- bind_rows(all_women)
 glimpse(women_df)
 write_csv(women_df, "data_raw/meps_women_term10_country_group.csv")
 
+# decided on getting political group and country seperate (Promt14-19 ChatGPT)
+
+library(httr)
+library(jsonlite)
+library(dplyr)
+library(readr)
+
+terms <- 8:10
+
+countries <- c(
+  "BE","BG","CZ","DK","DE","EE","IE","EL","ES","FR","HR","IT",
+  "CY","LV","LT","LU","HU","MT","NL","AT","PL","PT","RO","SI",
+  "SK","FI","SE"
+)
+
+
+groups <- c(
+  "EPP",
+  "S&D",
+  "Renew",
+  "Greens/EFA",
+  "ECR",
+  "The Left",
+  "ID",
+  "NI"
+)
+
+all_women <- list()
+
+for (term in terms) {
+  for (country in countries) {
+    for (group in groups) {
+      
+      url <- paste0(
+        "https://data.europarl.europa.eu/api/v2/meps?",
+        "parliamentary-term=", term,
+        "&gender=FEMALE",
+        "&country-of-representation=", URLencode(country, reserved = TRUE),
+        "&political-group=", URLencode(group, reserved = TRUE),
+        "&limit=500"
+      )
+      
+      response <- GET(
+        url,
+        add_headers(
+          "User-Agent" = "mep-project-research-4.5.0",
+          "Accept" = "application/ld+json"
+        )
+      )
+      
+      cat("term:", term,
+          "| country:", country,
+          "| group:", group,
+          "| status:", status_code(response), "\n")
+      
+      if (status_code(response) != 200) next
+      
+      txt <- content(response, as = "text", encoding = "UTF-8")
+      if (nchar(txt) == 0) next
+      
+      parsed <- tryCatch(
+        fromJSON(txt, flatten = TRUE),
+        error = function(e) NULL
+      )
+      
+      if (is.null(parsed)) next
+      if (is.null(parsed$data)) next
+      if (length(parsed$data) == 0) next
+      
+      df <- as.data.frame(parsed$data)
+      if (nrow(df) == 0) next
+      
+      df$country <- country
+      df$political_group <- group
+      df$gender <- "FEMALE"
+      df$parliamentary_term <- term
+      
+      all_women[[paste(term, country, group, sep = "_")]] <- df
+      
+      Sys.sleep(0.2)
+    }
+  }
+}
+
+
+women_df <- bind_rows(all_women)
+glimpse(women_df)
+write_csv(women_df, "data_raw/meps_women_terms_8_10_country_group.csv")
 
 
 

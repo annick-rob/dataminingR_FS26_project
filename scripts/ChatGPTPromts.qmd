@@ -1,0 +1,69 @@
+---
+title: "ChatGPT Promts"
+author: "Annick Robatel"
+format: html
+editor: visual
+---
+
+## Here are the promts I used to write to ChatGPT when i got stuck
+
+1.  Is "mep-project-research-4.5." an adequate agent-name to use for the European Parliment open AI?
+
+2.  What exactly does fromJSON(data, flatten = TRUE) do?
+
+3.  I want to save meps_df as csv in data raw now. What is the correct code?
+
+4.  I don't have automatic columns for name and country only the names. Could I write a Loop that gets me directly all the women from the newest parlamentary term (10) and creating new columns for gender and country?
+
+5.  Something does not work. I get Error: parse error: premature EOF (right here) ------\^
+
+6.  I ran: all_women \<- list()\
+    \
+    for(country in countries){\
+    \
+    url \<- paste0(\
+    "https://data.europarl.europa.eu/api/v2/meps?",\
+    "parliamentary-term=10",\
+    "&gender=FEMALE",\
+    "&country-of-representation=", country,\
+    "&limit=500"\
+    )\
+    \
+    response \<- GET(\
+    url,\
+    add_headers(\
+    "User-Agent" = "mep-project-research-4.5.0",\
+    "Accept" = "application/ld+json"\
+    )\
+    )\
+    \
+    data \<- content(response, as = "text", encoding = "UTF-8")\
+    data_json \<- jsonlite::fromJSON(data, flatten = TRUE)\
+    \
+    df \<- as.data.frame(data_json\$data)\
+    \
+    df\$country \<- country\
+    \
+    all_women\[\[country\]\] \<- df\
+    }\
+    \
+    women_df \<- bind_rows(all_women), something still does not work. How could i get it to run?
+
+7.   explain this code line to line to me
+
+    if (status_code(response) != 200) next
+
+    txt \<- content(response, as = "text", encoding = "UTF-8")
+
+    if (nchar(txt) == 0) next
+
+    parsed \<- tryCatch( fromJSON(txt, flatten = TRUE), error = function(e) NULL )
+
+    if (is.null(parsed)) next if (is.null(parsed$data)) next
+      if (length(parsed$data) == 0) next
+
+8.  Can I do the same for the men now?
+
+9.  
+
+## 

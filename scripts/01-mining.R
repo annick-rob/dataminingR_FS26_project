@@ -3,14 +3,15 @@ library(tidyverse)
 library(httr)
 library(jsonlite)
 
-#defining the url for the informations about the Members of the Parliment (Promt 1 ChatGPT)
-url <- "https://data.europarl.europa.eu/api/v2/meps?limit=50" 
+# using the current parliamentary-term taking all MEPS
+#defining the url for the informations about the Members of the Parliment (directly fromm the Website)
+url <- "https://data.europarl.europa.eu/api/v2/meps?parliamentary-term=10&political-group=&country-of-representation=&format=application%2Fld%2Bjson&offset=0&limit=500" 
 
 #user-Agent (Promt 2 ChatGPT)
 response <- GET(
   url,
   add_headers(
-    "User-Agent" = "mep-project-research-1.0",
+    "User-Agent" = "mep-project-research-4.5.0",
     "Accept" = "application/ld+json"
   )
 )

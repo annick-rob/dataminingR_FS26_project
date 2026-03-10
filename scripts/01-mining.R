@@ -296,4 +296,81 @@ glimpse(women_df)
 write_csv(women_df, "data_raw/meps_women_terms_8_10_country_group.csv")
 
 
+#now the same for men ----
+library(httr)
+library(jsonlite)
+library(dplyr)
+library(readr)
+
+terms <- 8:10
+
+countries <- c(
+  "BE","BG","CZ","DK","DE","EE","IE","EL","ES","FR","HR","IT",
+  "CY","LV","LT","LU","HU","MT","NL","AT","PL","PT","RO","SI",
+  "SK","FI","SE"
+)
+
+groups <- c(
+  "EPP",
+  "S&D",
+  "Renew",
+  "Greens/EFA",
+  "ECR",
+  "The Left",
+  "ID",
+  "NI"
+)
+
+all_men <- list()
+
+for (term in terms) {
+  for (country in countries) {
+    for (group in groups) {
+      
+      url <- paste0(
+        "https://data.europarl.europa.eu/api/v2/meps?",
+        "parliamentary-term=", term,
+        "&gender=MALE",
+        "&country-of-representation=", URLencode(country),
+        "&political-group=", URLencode(group),
+        "&limit=500"
+      )
+      
+      response <- GET(
+        url,
+        add_headers(
+          "User-Agent" = "mep-project-research-4.5.0",
+          "Accept" = "application/ld+json"
+        )
+      )
+      
+      if (status_code(response) != 200) next
+      
+      txt <- content(response, as = "text", encoding = "UTF-8")
+      
+      parsed <- tryCatch(
+        fromJSON(txt, flatten = TRUE),
+        error = function(e) NULL
+      )
+      
+      if (is.null(parsed) || is.null(parsed$data)) next
+      
+      df <- as.data.frame(parsed$data)
+      
+      if (nrow(df) == 0) next
+      
+      df$country <- country
+      df$political_group <- group
+      df$gender <- "MALE"
+      df$parliamentary_term <- term
+      
+      all_men[[paste(term,country,group)]] <- df
+      
+      Sys.sleep(0.2)
+    }
+  }
+}
+
+men_df <- bind_rows(all_men)
+write_csv(men_df, "data_raw/meps_men_terms_8_10_country_group.csv")
 

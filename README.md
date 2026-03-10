@@ -6,7 +6,7 @@ This repository contains the code for a small data mining project developed as p
 
 University of Lucerne
 
-Student Name  
+Annick Robatel
 Course: Data Mining for the Social Sciences using R
 Term: Spring 2026
 
@@ -24,11 +24,7 @@ The project should demonstrate:
 
 ## Research Question
 
-*(Replace with your own question)*
-
-Example:
-- How frequently do political speeches contain populist rhetoric?
-
+What factors explain variation in the parliamentary productivity of Members of the European Parliament?
 
 ## Data Source
 
@@ -36,16 +32,9 @@ Describe the data source here.
 
 Example:
 
-- API: https://example-api.com
-- Documentation: https://example-api.com/docs
+- API: https://data.europarl.europa.eu/api/v2 
+- Documentation: https://data.europarl.europa.eu/en/developer-corner/opendata-api
 - Access method: HTTP GET requests
-
-
-## Repository Structure
-
-/code     scripts used to collect/process data
-/data     output datasets (not tracked/pushed by git)
-README.md   project description
 
 
 ## Reproducibility
@@ -59,7 +48,7 @@ To reproduce this project:
 All data should be generated automatically by the scripts.
 
 
-## Good Practices
+
 
 Please follow these guidelines:
 
@@ -69,14 +58,3 @@ Please follow these guidelines:
 - Commit your work **frequently**.
 - Use **clear commit messages**.
 
-Example commit messages:
-added API request
-cleaned dataset structure
-added visualization
-fixed JSON parsing
-
-
-## Notes
-
-Large datasets should not be pushed to GitHub.  
-If necessary, provide instructions for downloading the data instead.

@@ -4,6 +4,9 @@ library(httr)
 library(jsonlite)
 library(readr)
 
+################
+#very first try
+################
 # using the current parliamentary-term taking all MEPS
 #defining the url for the informations about the Members of the Parliment (directly fromm the Website)
 url <- "https://data.europarl.europa.eu/api/v2/meps?parliamentary-term=10&political-group=&country-of-representation=&format=application%2Fld%2Bjson&offset=0&limit=500" 
@@ -35,9 +38,12 @@ glimpse(meps_df)
 write_csv(meps_df, "data_raw/meps_raw.csv")
 
 
-#df for Women parlamentary term 10 ----
+################
+#second try
+################
+#get data for df of women from parlamentary term 10 ----
 #Generating a Loop to get all Women form every country and generating directly a country variable
-# but only for the last parlamentary term (10)
+#but only for the last parlamentary term (10)
 
 #(Promts 4-9 ChatGPT)
 
@@ -96,10 +102,11 @@ women_df <- bind_rows(all_women)
 glimpse(women_df)
 write_csv(women_df, "data_raw/meps_women_term10_by_country.csv")
 
-#df for Women all parlamentary ters ---- (Promt 9 ChatGPT)
+################
+#next try
+################
+#df for Women all parlamentary terms ---- (Promt 9 ChatGPT)
 #Generating a Loop to get all Women form every country and generating directly a country variable
-
-
 for (country in countries) {
   
   url <- paste0(
@@ -143,8 +150,10 @@ women_df <- bind_rows(all_women)
 glimpse(women_df)
 write_csv(women_df, "data_raw/meps_women_allterms_by_country.csv")
 
-
-#trying to get the political group as well (Promt10-13  ChatGPT)----
+################
+#third try
+################
+#trying to get the political group as well in my loop (Promt10-14  ChatGPT)----
 countries <- c(
   "BE","BG","CZ","DK","DE","EE","IE","EL","ES","FR","HR","IT",
   "CY","LV","LT","LU","HU","MT","NL","AT","PL","PT","RO","SI",
@@ -206,82 +215,11 @@ women_df <- bind_rows(all_women)
 glimpse(women_df)
 write_csv(women_df, "data_raw/meps_women_term10_country_group.csv")
 
-# decided on getting political group and country seperate (Promt14-19 ChatGPT)
-#Women terms 8-10 and countries ----
 
-library(httr)
-library(jsonlite)
-library(dplyr)
-library(readr)
-
-terms <- 8:10
-
-countries <- c(
-  "BE","BG","CZ","DK","DE","EE","IE","EL","ES","FR","HR","IT",
-  "CY","LV","LT","LU","HU","MT","NL","AT","PL","PT","RO","SI",
-  "SK","FI","SE"
-)
-
-all_women <- list()
-
-for (term in terms) {
-  for (country in countries) {
-    
-    url <- paste0(
-      "https://data.europarl.europa.eu/api/v2/meps?",
-      "parliamentary-term=", term,
-      "&gender=FEMALE",
-      "&country-of-representation=", country,
-      "&limit=500"
-    )
-    
-    response <- GET(
-      url,
-      add_headers(
-        "User-Agent" = "mep-project-research-4.5.0",
-        "Accept" = "application/ld+json"
-      )
-    )
-    
-    cat("term:", term,
-        "| country:", country,
-        "| status:", status_code(response), "\n")
-    
-    if (status_code(response) != 200) next
-    
-    txt <- content(response, as = "text", encoding = "UTF-8")
-    if (nchar(txt) == 0) next
-    
-    parsed <- tryCatch(
-      fromJSON(txt, flatten = TRUE),
-      error = function(e) NULL
-    )
-    
-    if (is.null(parsed)) next
-    if (is.null(parsed$data)) next
-    if (length(parsed$data) == 0) next
-    
-    df <- as.data.frame(parsed$data)
-    if (nrow(df) == 0) next
-    
-    df$country <- country
-    df$gender <- "FEMALE"
-    df$parliamentary_term <- term
-    
-    all_women[[paste(term, country, sep = "_")]] <- df
-    
-    Sys.sleep(0.2)
-  }
-}
-
-women_df <- bind_rows(all_women)
-
-glimpse(women_df)
-
-write_csv(women_df, "data_raw/meps_women_terms_8_10_by_country.csv")
-
-
-#women terms 8-10 and ploitical group----
+################
+#next try
+################
+#women terms 8-10 and ploitical group---- (Promt14-18  ChatGPT)
 
 terms <- 8:10
 
@@ -355,17 +293,10 @@ glimpse(women_by_group)
 write_csv(women_by_group, "data_raw/meps_women_terms_8_10_by_group.csv")
 
 
-
-
-
-
-
-
-
-
-
-
-#final request for women ---- 
+################
+#final try for women
+################
+#final request for women ---- (Promt 19-23  ChatGPT)
 terms <- 8:10
 
 countries <- c(

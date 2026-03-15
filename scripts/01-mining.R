@@ -380,3 +380,103 @@ glimpse(women_df)
 write_csv(women_df, "data_raw/meps_women_terms_8_10_country_group.csv")
 
 
+################
+#final try for men
+################
+# request for men ---- (Promt 24  ChatGPT)
+
+terms <- 8:10
+
+countries <- c(
+  "BE","BG","CZ","DK","DE","EE","IE","EL","ES","FR","HR","IT",
+  "CY","LV","LT","LU","HU","MT","NL","AT","PL","PT","RO","SI",
+  "SK","FI","SE", "UK"
+)
+
+
+groups <- c(
+  "PPE",
+  "NI",
+  "S-D",
+  "VERTS-ALE",
+  "ECR",
+  "RENEW",
+  "THE-LEFT",
+  "ID"
+)
+
+all_men <- list()
+
+for (term in terms) {
+  for (country in countries) {
+    for (group in groups) {
+      
+      url <- paste0(
+        "https://data.europarl.europa.eu/api/v2/meps?",
+        "parliamentary-term=", term,
+        "&gender=MALE",
+        "&country-of-representation=", URLencode(country, reserved = TRUE),
+        "&political-group=", URLencode(group, reserved = TRUE),
+        "&limit=500"
+      )
+      
+      response <- tryCatch(
+        GET(
+          url,
+          add_headers(
+            "User-Agent" = "mep-project-research-4.5.0",
+            "Accept" = "application/ld+json"
+          ),
+          timeout(60)
+        ),
+        error = function(e) {
+          cat("Request failed:",
+              "term =", term,
+              "| country =", country,
+              "| group =", group, "\n")
+          return(NULL)
+        }
+      )
+      
+      if (is.null(response)) next
+      
+      cat("term:", term,
+          "| country:", country,
+          "| group:", group,
+          "| status:", status_code(response), "\n")
+      
+      if (status_code(response) != 200) next
+      
+      txt <- content(response, as = "text", encoding = "UTF-8")
+      if (nchar(txt) == 0) next
+      
+      parsed <- tryCatch(
+        fromJSON(txt, flatten = TRUE),
+        error = function(e) NULL
+      )
+      
+      if (is.null(parsed)) next
+      if (is.null(parsed$data)) next
+      if (length(parsed$data) == 0) next
+      
+      df <- as.data.frame(parsed$data)
+      if (nrow(df) == 0) next
+      
+      df$country <- country
+      df$political_group <- group
+      df$gender <- "MALE"
+      df$parliamentary_term <- term
+      
+      all_men[[paste(term, country, group, sep = "_")]] <- df
+      
+      Sys.sleep(0.5)
+    }
+  }
+}
+
+men_df <- bind_rows(all_men)
+glimpse(men_df)
+write_csv(men_df, "data_raw/meps_men_terms_8_10_country_group.csv")
+
+
+

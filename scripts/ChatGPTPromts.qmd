@@ -186,6 +186,28 @@ if (is.null(parsed)) next if (is.null(parsed$data)) next
     }\
     }
 
-13. 
+13. Why are in meps_women_term10_country_group only 36 women?
+
+14. What does Status 204 mean?
+
+15. d
+
+16. d
+
+17. d
+
+18. d
+
+19. d
+
+20. d
+
+21. d
+
+22. d
+
+23. d
+
+24. Error in curl::curl_fetch_memory(url, handle = handle) : Timeout was reached \[data.europarl.europa.eu\]: Operation too slow. Less than 1 bytes/sec transferred the last 600 seconds. What does that mean?
 
 ## 

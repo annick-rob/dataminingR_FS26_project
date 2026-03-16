@@ -482,7 +482,82 @@ write_csv(men_df, "data_raw/meps_men_terms_8_10_country_group.csv")
 #combine datasets
 meps_df <- bind_rows(women_df, men_df)
 glimpse(meps_df)
-write_csv(meps_df, "data_raw/mepsterms_8_10.csv")
+write_csv(meps_df, "data_raw/meps_terms_8_10.csv")
 
+################################################################################
+#speeches per mep (Promt 25-30  ChatGPT)
+
+speech_counts <- list()
+
+for (i in 1:nrow(meps_preprocessed)) {
+  
+  person_id <- meps_preprocessed$identifier[i]
+  term <- meps_preprocessed$parliamentary_term[i]
+  
+  url <- paste0(
+    "https://data.europarl.europa.eu/api/v2/speeches?",
+    "person-id=", person_id,
+    "&parliamentary-term=", term,
+    "&activity-type=PLENARY_DEBATE_SPEECH",
+    "&limit=500"
+  )
+  
+  response <- tryCatch(
+    GET(
+      url,
+      add_headers(
+        "User-Agent" = "mep-project-research-4.5.0",
+        "Accept" = "application/ld+json"
+      ),
+      timeout(60)
+    ),
+    error = function(e) NULL
+  )
+  
+  if (is.null(response)) next
+  
+  cat("i:", i,
+      "| person:", person_id,
+      "| term:", term,
+      "| status:", status_code(response), "\n")
+  
+  if (status_code(response) == 204) {
+    speech_counts[[i]] <- data.frame(
+      identifier = person_id,
+      parliamentary_term = term,
+      speeches = 0
+    )
+    next
+  }
+  
+  if (status_code(response) != 200) next
+  
+  txt <- content(response, as = "text", encoding = "UTF-8")
+  if (nchar(txt) == 0) next
+  
+  parsed <- tryCatch(
+    fromJSON(txt, flatten = TRUE),
+    error = function(e) NULL
+  )
+  
+  if (is.null(parsed) || is.null(parsed$data)) {
+    n_speeches <- 0
+  } else {
+    df <- as.data.frame(parsed$data)
+    n_speeches <- nrow(df)
+  }
+  
+  speech_counts[[i]] <- data.frame(
+    identifier = person_id,
+    parliamentary_term = term,
+    speeches = n_speeches
+  )
+  
+  Sys.sleep(0.2)
+}
+
+speech_counts_df <- bind_rows(speech_counts)
+
+write_csv(speech_counts_df, "data_raw/speech_counts_terms_9_10.csv")
 
 

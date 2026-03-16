@@ -563,13 +563,5 @@ speech_counts_df <- bind_rows(speech_counts)
 write_csv(speech_counts_df, "data_raw/speech_counts_terms_9_10.csv")
 
 
-################################################################################
-
-################
-#questions per mep (Promt 30-33  ChatGPT)
-################
-
-
-
 
 

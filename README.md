@@ -79,14 +79,5 @@ The project follows these steps:
 - Prepare the data for subsequent analysis of parliamentary productivity
 
 
-## Reproducibility
-
-To reproduce this project:
-
-1. Clone the repository
-2. Install required R packages
-3. Run the scripts in the `scripts/` folder
-All data should be generated automatically by the scripts.
-
 
 

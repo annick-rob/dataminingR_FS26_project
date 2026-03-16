@@ -1,4 +1,4 @@
-# Data Mining Project 
+# Data Mining Project
 
 This repository contains the code for a small data mining project developed as part of the course:
 

@@ -32,6 +32,16 @@ meps_preprocessed <- meps_preprocessed |>
     parliamentary_term
   )
 
+#duplicates?
+meps_preprocessed <- meps_preprocessed |> 
+  distinct()
+
+summary(meps_preprocessed)
 View(meps_preprocessed)
+
+#save df
+write_csv(
+  meps_preprocessed,
+  "data_preprocessed/meps_preprocessed.csv")
 
 

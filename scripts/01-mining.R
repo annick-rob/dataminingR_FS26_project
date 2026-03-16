@@ -485,7 +485,7 @@ glimpse(meps_df)
 write_csv(meps_df, "data_raw/meps_terms_8_10.csv")
 
 ################################################################################
-#speeches per mep (Promt 25-30  ChatGPT)
+#speeches per mep (Promt 25-31  ChatGPT)
 
 speech_counts <- list()
 
@@ -559,5 +559,3 @@ for (i in 1:nrow(meps_preprocessed)) {
 speech_counts_df <- bind_rows(speech_counts)
 
 write_csv(speech_counts_df, "data_raw/speech_counts_terms_9_10.csv")
-
-

@@ -6,7 +6,7 @@ meps_terms_8_10 <- read_csv("01-data_raw/meps_terms_8_10.csv")
 View(meps_terms_8_10)
 
 #delete the variables I don't need for the analysis
-meps_preprocessed <- meps_df |> 
+meps_preprocessed <- meps_terms_8_10 |> 
   select(
     identifier,
     givenName,
@@ -42,7 +42,7 @@ View(meps_preprocessed)
 #save df
 write_csv(
   meps_preprocessed,
-  "data_preprocessed/meps_preprocessed.csv")
+  "02-data_preprocessed/meps_preprocessed.csv")
 
 #speeches
 speech_counts_terms_9_10 <- read_csv("01-data_raw/speech_counts_terms_9_10.csv")
@@ -57,8 +57,12 @@ write_csv(
 #add speeches per MEP 
 meps_productivity <- meps_preprocessed |> 
   left_join(
-    speech_counts_df,
+    speech_counts_terms_9_10,
     by = c("identifier", "parliamentary_term")
   )
-View(meps_productivity1)
+View(meps_productivity)
 
+#save df
+write_csv(
+  meps_productivity,
+  "02-data_preprocessed/meps_productivity.csv")

@@ -60,5 +60,5 @@ meps_productivity <- meps_preprocessed |>
     speech_counts_df,
     by = c("identifier", "parliamentary_term")
   )
-View(meps_productivity)
+View(meps_productivity1)
 

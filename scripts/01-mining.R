@@ -479,4 +479,10 @@ glimpse(men_df)
 write_csv(men_df, "data_raw/meps_men_terms_8_10_country_group.csv")
 
 
+#combine datasets
+meps_df <- bind_rows(women_df, men_df)
+glimpse(meps_df)
+write_csv(meps_df, "data_raw/mepsterms_8_10.csv")
+
+
 

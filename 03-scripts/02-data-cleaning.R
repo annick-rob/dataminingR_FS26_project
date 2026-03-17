@@ -66,3 +66,31 @@ View(meps_productivity)
 write_csv(
   meps_productivity,
   "02-data_preprocessed/meps_productivity.csv")
+
+#recode gender
+table(meps_productivity$gender)
+meps_productivity <- meps_productivity |> 
+  mutate(gender = ifelse(gender == "MALE", 1, 0))
+
+#check result
+table(meps_productivity$gender)
+
+#dependent variable
+meps_productivity$productivity <- meps_productivity$speeches
+
+#term variable
+meps_productivity$term <- meps_productivity$parliamentary_term
+
+#categorical variables
+meps_productivity$political_group <- as.factor(meps_productivity$political_group)
+meps_productivity$country <- as.factor(meps_productivity$country)
+
+#save dataframe
+write_csv(
+  meps_productivity,
+  "02-data_preprocessed/meps_productivity.csv"
+)
+
+
+
+

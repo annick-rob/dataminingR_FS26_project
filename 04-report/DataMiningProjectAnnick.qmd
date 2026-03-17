@@ -1,0 +1,51 @@
+---
+title: "Data Mining Project FS26"
+author: "Annick Robatel"
+format: pdf
+editor: visual
+---
+
+# Productivity variation among Members of the European Parliament
+
+## Introduction and Theory
+
+The European Parliament (EP) has developed into a central legislative institution within the European Union, with Members of the European Parliament (MEPs) engaging in a wide range of parliamentary activities such as speeches, written questions, reports, and motions. Despite the increasing importance of the EP, scholars have repeatedly noted substantial variation in the level of activity among individual MEPs. Some members are highly active in parliamentary debates, while others participate far less frequently. Understanding what explains these differences in parliamentary productivity is therefore an important question for research on legislative behaviour in the European Union.
+
+One way to study parliamentary productivity is by analysing participation in plenary speeches. Parliamentary speeches are a central component of legislative work because they allow legislators to express policy positions, communicate with voters, and signal political priorities. In the European Parliament in particular, speeches serve as an important channel through which MEPs publicly position themselves on policy issues and ideological conflicts. Proksch and Slapin (2010) show that speeches in EP plenary debates reflect political conflict and can be used to identify ideological positions among political actors (pp. 587–588). Furthermore, speeches constitute a visible and measurable form of parliamentary participation, making them a commonly used indicator of legislative activity in empirical research. Studies of EP behaviour often include speeches alongside other parliamentary instruments when measuring the activity levels of individual MEPs (Sorace 2018:10). Because speech contributions are recorded systematically and occur frequently during plenary debates, they provide a reliable and comparable indicator of how actively legislators participate in parliamentary proceedings.
+
+Another reason speeches are an appropriate measure of parliamentary productivity is that they represent strategic behaviour by legislators. MEPs can use speeches to communicate their positions not only to fellow legislators but also to national parties and constituents. Research shows that speeches are frequently used by MEPs to demonstrate loyalty to their national party or to signal policy positions publicly (Proksch & Slapin 2010: 587). Moreover, evidence suggests that legislators often prioritise speeches over other forms of parliamentary activity because speeches provide greater visibility in the legislative arena (Euchner et al. 2020:73). Consequently, analysing speech frequency offers an effective way to capture how actively MEPs engage in parliamentary debates and policy discussions.
+
+In explaining variation in parliamentary speech activity, two factors are particularly relevant: gender and political affiliation. Gender has long been recognised as an important dimension of political representation and participation. Research on legislative behaviour suggests that structural inequalities and institutional norms may influence the opportunities available to male and female legislators. Studies of parliamentary speech behaviour show that male legislators tend to speak more frequently than female legislators, partly because men more often occupy senior positions and leadership roles within legislatures (Bäck, Debus & Müller 201: 507). Women in political institutions often face barriers related to leadership positions, committee assignments, and informal parliamentary networks, which can affect their ability to participate in debates and other parliamentary activities (Kathlene 1994: 561). Even in the European Parliament, where female representation is comparatively high, institutional practices and party group dynamics continue to influence women’s political participation and opportunities for influence (Kantola & Rolandsen Agustín 2019: 769–770). As a result, gender may influence how frequently legislators speak in plenary debates.
+
+Political affiliation is another key determinant of legislative behaviour in the European Parliament. Unlike many national parliaments, the EP is organised around transnational political groups that structure cooperation, policy positions, and legislative coordination among MEPs. Party groups therefore play a central role in shaping how legislators behave within parliamentary debates. Previous research demonstrates that political conflict in EP speeches often reflects ideological differences between party groups, particularly along the left–right dimension (Proksch & Slapin 20:588). Party groups may also influence which members are given opportunities to speak during debates, as they coordinate participation and messaging strategies.
+
+Against this background I raise the following research question:
+
+***What factors explain variation in the parliamentary productivity of Members of the European Parliament?***
+
+My project examines variation in parliamentary productivity among Members of the European Parliament by analyzing the number of speeches delivered in plenary debates. Specifically, it investigates whether gender and political affiliation help explain differences in speech activity among MEPs.
+
+## Data
+
+## Method
+
+To analyse the determinants of parliamentary productivity, this study employs a quantitative regression analysis using data on Members of the European Parliament (MEPs). Parliamentary productivity is measured as the number of speeches delivered by each MEP in plenary debates, which serves as the dependent variable. Speeches represent a visible form of legislative participation and capture how actively legislators engage in parliamentary debates. The main independent variables are gender and political group affiliation, which capture individual and political characteristics of legislators. Additional control variables include country of representation and parliamentary term. The empirical model is estimated using a linear regression framework:
+
+\
+$\text{Productivity}_i = \beta_0 + \beta_1 \text{Gender}_i + \beta_2 \text{PoliticalGroup}_i + \beta_3 \text{Country}_i + \beta_4 \text{Term}_i + \epsilon_i$
+
+The regression estimates how these factors are associated with variation in parliamentary activity among MEPs. (here I used ChatGPT to get the Latex in my Quarto)
+
+## Results
+
+```{r}
+1 + 1
+```
+
+## Discussion
+
+When you click the **Render** button a document will be generated that includes both content and the output of embedded code. You can embed code like this:
+
+```{r}
+1 + 1
+```

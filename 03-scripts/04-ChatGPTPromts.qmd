@@ -1,7 +1,7 @@
 ---
 title: "ChatGPT Promts"
 author: "Annick Robatel"
-format: html
+format: pdf
 editor: visual
 ---
 
@@ -190,9 +190,9 @@ if (is.null(parsed)) next if (is.null(parsed$data)) next
 
 15. Would it be better to get the terms seperately?
 
-16. How
+16. How can I now include the terms in my loop? 8-10
 
-17. 
+17. Explain the loop in the loop to me.
 
 18. 
 
@@ -204,7 +204,7 @@ if (is.null(parsed)) next if (is.null(parsed$data)) next
 
 22. for (term in terms) { for (country in countries) { for (group in groups) { -\> so it looks at terms first, in the term for country and in the country for group?
 
-23. 
+23. I do get an error. Explain it to me.
 
 24. Error in curl::curl_fetch_memory(url, handle = handle) : Timeout was reached \[data.europarl.europa.eu\]: Operation too slow. Less than 1 bytes/sec transferred the last 600 seconds. What does that mean?
 
@@ -217,7 +217,5 @@ if (is.null(parsed)) next if (is.null(parsed$data)) next
 28. There are only speeches for the 9 and 10 term... can you adjust the loop?
 
 29. Can I then merge my new df to my existing one with the MEPS and their infos?
-
-30. 
 
 ## 

@@ -57,7 +57,9 @@ ggsave(
 )
 
 # Productivity across Parliamentary Terms
-plot_terms <- ggplot(meps_productivity, aes(x = term, y = productivity)) +
+plot_terms <- meps_productivity |>
+  dplyr::filter(term != 8) |>
+  ggplot(aes(x = term, y = productivity)) +
   geom_point(alpha = 0.4) +
   geom_smooth(method = "lm") +
   labs(

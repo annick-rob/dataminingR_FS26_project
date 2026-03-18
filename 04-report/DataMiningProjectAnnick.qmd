@@ -1,5 +1,5 @@
 ---
-title: "Data Mining Project FS26"
+title: "Productivity variation among Members of the European Parliament"
 author: "Annick Robatel"
 format: pdf
 editor: visual
@@ -7,15 +7,17 @@ editor: visual
 
 # Productivity variation among Members of the European Parliament
 
+## Use of LLM's
+
+In my folder 03-scripts can a quarto be found with all my Promts i asked to ChatGPT. In the text and also the scripts it is always marked, where i used which promt to understand/get my code.
+
 ## Introduction and Theory
 
-The European Parliament (EP) has developed into a central legislative institution within the European Union, with Members of the European Parliament (MEPs) engaging in a wide range of parliamentary activities such as speeches, written questions, reports, and motions. Despite the increasing importance of the EP, scholars have repeatedly noted substantial variation in the level of activity among individual MEPs. Some members are highly active in parliamentary debates, while others participate far less frequently. Understanding what explains these differences in parliamentary productivity is therefore an important question for research on legislative behaviour in the European Union.
+The European Parliament (EP) has developed into a central legislative institution within the European Union, with Members of the European Parliament (MEPs) engaging in a wide range of parliamentary activities such as speeches, written questions, reports, and motions. Despite the increasing importance of the EP, scholars have repeatedly noted substantial variation in the level of activity among individual MEPs. Understanding what explains these differences in parliamentary productivity is therefore an important question for research on legislative behaviour in the European Union.
 
-One way to study parliamentary productivity is by analysing participation in plenary speeches. Parliamentary speeches are a central component of legislative work because they allow legislators to express policy positions, communicate with voters, and signal political priorities. In the European Parliament in particular, speeches serve as an important channel through which MEPs publicly position themselves on policy issues and ideological conflicts. Proksch and Slapin (2010) show that speeches in EP plenary debates reflect political conflict and can be used to identify ideological positions among political actors (pp. 587–588). Furthermore, speeches constitute a visible and measurable form of parliamentary participation, making them a commonly used indicator of legislative activity in empirical research. Studies of EP behaviour often include speeches alongside other parliamentary instruments when measuring the activity levels of individual MEPs (Sorace 2018:10). Because speech contributions are recorded systematically and occur frequently during plenary debates, they provide a reliable and comparable indicator of how actively legislators participate in parliamentary proceedings.
+One way to study parliamentary productivity is by analysing participation in plenary speeches. Parliamentary speeches are a central component of legislative work because they allow legislators to express policy positions, communicate with voters, and signal political priorities. Proksch and Slapin (2010) show that speeches in EP plenary debates reflect political conflict and can be used to identify ideological positions among political actors (pp. 587–588). Furthermore, speeches constitute a visible and measurable form of parliamentary participation, making them a commonly used indicator of legislative activity in empirical research. Studies of EP behaviour often include speeches alongside other parliamentary instruments when measuring the activity levels of individual MEPs (Sorace 2018:10).  MEPs can use speeches to communicate their positions not only to fellow legislators but also to national parties and constituents. Research shows that speeches are frequently used by MEPs to demonstrate loyalty to their national party or to signal policy positions publicly (Proksch & Slapin 2010: 587). Moreover, evidence suggests that legislators often prioritise speeches over other forms of parliamentary activity because speeches provide greater visibility in the legislative arena (Euchner et al. 2020:73).
 
-Another reason speeches are an appropriate measure of parliamentary productivity is that they represent strategic behaviour by legislators. MEPs can use speeches to communicate their positions not only to fellow legislators but also to national parties and constituents. Research shows that speeches are frequently used by MEPs to demonstrate loyalty to their national party or to signal policy positions publicly (Proksch & Slapin 2010: 587). Moreover, evidence suggests that legislators often prioritise speeches over other forms of parliamentary activity because speeches provide greater visibility in the legislative arena (Euchner et al. 2020:73). Consequently, analysing speech frequency offers an effective way to capture how actively MEPs engage in parliamentary debates and policy discussions.
-
-In explaining variation in parliamentary speech activity, two factors are particularly relevant: gender and political affiliation. Gender has long been recognised as an important dimension of political representation and participation. Research on legislative behaviour suggests that structural inequalities and institutional norms may influence the opportunities available to male and female legislators. Studies of parliamentary speech behaviour show that male legislators tend to speak more frequently than female legislators, partly because men more often occupy senior positions and leadership roles within legislatures (Bäck, Debus & Müller 201: 507). Women in political institutions often face barriers related to leadership positions, committee assignments, and informal parliamentary networks, which can affect their ability to participate in debates and other parliamentary activities (Kathlene 1994: 561). Even in the European Parliament, where female representation is comparatively high, institutional practices and party group dynamics continue to influence women’s political participation and opportunities for influence (Kantola & Rolandsen Agustín 2019: 769–770). As a result, gender may influence how frequently legislators speak in plenary debates.
+In explaining variation in parliamentary speech activity, two factors are particularly relevant: gender and political affiliation. Gender has long been recognised as an important dimension of political representation and participation. Studies of parliamentary speech behaviour show that male legislators tend to speak more frequently than female legislators, partly because men more often occupy senior positions and leadership roles within legislatures (Bäck, Debus & Müller 201: 507). Women in political institutions often face barriers related to leadership positions, committee assignments, and informal parliamentary networks, which can affect their ability to participate in debates and other parliamentary activities (Kathlene 1994: 561). Even in the European Parliament, where female representation is comparatively high, institutional practices and party group dynamics continue to influence women’s political participation and opportunities for influence (Kantola & Rolandsen Agustín 2019: 769–770). As a result, gender may influence how frequently legislators speak in plenary debates.
 
 Political affiliation is another key determinant of legislative behaviour in the European Parliament. Unlike many national parliaments, the EP is organised around transnational political groups that structure cooperation, policy positions, and legislative coordination among MEPs. Party groups therefore play a central role in shaping how legislators behave within parliamentary debates. Previous research demonstrates that political conflict in EP speeches often reflects ideological differences between party groups, particularly along the left–right dimension (Proksch & Slapin 20:588). Party groups may also influence which members are given opportunities to speak during debates, as they coordinate participation and messaging strategies.
 
@@ -23,29 +25,590 @@ Against this background I raise the following research question:
 
 ***What factors explain variation in the parliamentary productivity of Members of the European Parliament?***
 
-My project examines variation in parliamentary productivity among Members of the European Parliament by analyzing the number of speeches delivered in plenary debates. Specifically, it investigates whether gender and political affiliation help explain differences in speech activity among MEPs.
+## Getting my Data
 
-## Data
+To get the data for the analysis, I used the open data API of the European Parliament (<https://data.europarl.europa.eu/api/v2>) . The data collection process was iterative and developed in several steps, starting with a simple test request and gradually moving toward a more structured dataset that included the relevant independent variables and the dependent variable used in the analysis.
+
+As a first step, I set up the R environment by loading the main packages needed for data collection and processing. `tidyverse` was used for data handling and combining datasets, `httr` for sending HTTP requests to the API, `jsonlite` for transforming JSON responses into R objects, and `readr` for exporting the resulting data frames as CSV files. After this setup, I made an initial test request to the `/meps` endpoint of the European Parliament API. The goal of this first request was simply to check whether I could access the data and convert the API output into a usable tabular format. For this request, I specified the current parliamentary term (`parliamentary-term=10`) and set a limit of 500 observations. I also added a `User-Agent` and specified that I wanted the response in `application/ld+json` format. I was directly able to choose on the website what I wanted to get and then could copy the url from the website, which was really practical. After sending the request with `GET()`, I checked the status code to verify that the request had been successful. The response content was then saved as text, parsed from JSON into R with `fromJSON()`, and transformed into a first raw data frame containing information on MEPs. This raw file was then saved in the `data_raw` folder. (Promt1&2 ChatGPT)
+
+```{r}
+#| eval: false
+library(tidyverse)
+library(httr)
+library(jsonlite)
+library(readr)
+
+url <- "https://data.europarl.europa.eu/api/v2/meps?parliamentary-term=10&political-group=&country-of-representation=&format=application%2Fld%2Bjson&offset=0&limit=500" 
+
+#user-Agent (Promt1 ChatGPT)
+response <- GET(
+  url,
+  add_headers(
+    "User-Agent" = "mep-project-research-4.5.0",
+    "Accept" = "application/ld+json"
+  )
+)
+
+
+# Check if this works -> 200
+status_code(response)
+
+#saving what i recieved as text
+data <- content(response, as = "text", encoding = "UTF-8")
+
+#Putting the JSON in R (Promt2 ChatGPT)
+data_json <- fromJSON(data, flatten = TRUE)
+
+#getting a df 
+meps_df <- as.data.frame(data_json$data)
+glimpse(meps_df)
+
+#save as csv in data_raw 
+#write_csv(meps_df, "data_raw/meps_raw.csv")
+```
+
+In a second step, I moved from this simple test request to a more targeted data collection strategy. Since gender is one of the central explanatory variables in my analysis, I first created a separate dataset for women. To do this, I defined a vector with the country codes of all EU member states and then wrote a loop that queried the `/meps` endpoint once for each country. In each request, I restricted the data to female MEPs (`gender=FEMALE`) and to the current parliamentary term (`parliamentary-term=10`). For every response, I again checked whether the status code was successful and whether the returned content was non-empty. I used `tryCatch()` to avoid errors when parsing the JSON output. Whenever valid observations were returned, I converted them into a data frame, added variables for country, gender, and parliamentary term manually, and stored the result in a list. After the loop had finished, I combined all country-specific subsets into one data frame of female MEPs and saved it as a CSV file. (Promts 4-8 ChatGPT)
+
+```{r}
+#| eval: false
+all_women <- list()
+
+countries <- c(
+  "BE","BG","CZ","DK","DE","EE","IE","EL","ES","FR","HR","IT",
+  "CY","LV","LT","LU","HU","MT","NL","AT","PL","PT","RO","SI",
+  "SK","FI","SE"
+)
+
+for (country in countries) {
+  
+  url <- paste0(
+    "https://data.europarl.europa.eu/api/v2/meps?",
+    "parliamentary-term=10",
+    "&gender=FEMALE",
+    "&country-of-representation=", country,
+    "&limit=500"
+  )
+  
+  response <- GET(
+    url,
+    add_headers(
+      "User-Agent" = "mep-project-research-4.5.0",
+      "Accept" = "application/ld+json"
+    )
+  )
+  
+  cat("Country:", country, "- Status:", status_code(response), "\n")
+  if (status_code(response) != 200) next
+  txt <- content(response, as = "text", encoding = "UTF-8")
+  if (nchar(txt) == 0) next
+  
+  parsed <- tryCatch(
+    fromJSON(txt, flatten = TRUE),
+    error = function(e) NULL
+  )
+  
+  if (is.null(parsed)) next
+  if (is.null(parsed$data)) next
+  if (length(parsed$data) == 0) next
+  
+  df <- as.data.frame(parsed$data)
+  
+  if (nrow(df) == 0) next
+  
+  df$country <- country
+  df$gender <- "FEMALE"
+  df$parliamentary_term <- 10
+  all_women[[country]] <- df
+}
+
+#checking the new row for women 
+women_df <- bind_rows(all_women)
+glimpse(women_df)
+#write_csv(women_df, "data_raw/meps_women_term10_by_country.csv")
+```
+
+In the next step, I expanded this procedure to women across all parliamentary terms. The logic remained the same, but I removed the term restriction from the API query. This allowed me to test whether I could retrieve broader historical data and compare the structure of the output. Again, I looped over all countries, parsed the responses, added country and gender variables, combined the resulting subsets, and saved the output. (Promt 9 ChatGPT)
+
+After that, I refined the data collection by trying to include political group affiliation directly in the query process. I defined a list of party groups and nested the country loop inside a second loop over groups. The idea was to retrieve women in parliamentary term 10 separately for each country-group combination. For each successful query, I appended country, political group, gender, and parliamentary term as variables. This step was important because political group is one of the main independent variables in the later regression analysis. (Promt10-14 ChatGPT)
+
+```{r}
+#| eval: false
+countries <- c(
+  "BE","BG","CZ","DK","DE","EE","IE","EL","ES","FR","HR","IT",
+  "CY","LV","LT","LU","HU","MT","NL","AT","PL","PT","RO","SI",
+  "SK","FI","SE"
+)
+
+groups <- c(
+  "EPP", "S&D", "PfE", "ECR", "Renew", "Greens/EFA", "The Left", "ESN", "NI"
+)
+
+all_women <- list()
+
+for (country in countries) {
+  for (group in groups) {
+    
+    url <- paste0(
+      "https://data.europarl.europa.eu/api/v2/meps?",
+      "parliamentary-term=10",
+      "&gender=FEMALE",
+      "&country-of-representation=", URLencode(country, reserved = TRUE),
+      "&political-group=", URLencode(group, reserved = TRUE),
+      "&limit=500"
+    )
+    
+    response <- GET(
+      url,
+      add_headers(
+        "User-Agent" = "mep-project-research-4.5.0",
+        "Accept" = "application/ld+json"
+      )
+    )
+    
+    if (status_code(response) != 200) next
+    
+    txt <- content(response, as = "text", encoding = "UTF-8")
+    if (nchar(txt) == 0) next
+    
+    parsed <- tryCatch(
+      fromJSON(txt, flatten = TRUE),
+      error = function(e) NULL
+    )
+    
+    if (is.null(parsed) || is.null(parsed$data) || length(parsed$data) == 0) next
+    
+    df <- as.data.frame(parsed$data)
+    if (nrow(df) == 0) next
+    
+    df$country <- country
+    df$political_group <- group
+    df$gender <- "FEMALE"
+    df$parliamentary_term <- 10
+    
+    all_women[[paste(country, group, sep = "_")]] <- df
+  }
+}
+
+women_df <- bind_rows(all_women)
+
+glimpse(women_df)
+#write_csv(women_df, "data_raw/meps_women_term10_country_group.csv")
+```
+
+In a further iteration, I extended this group-based approach to parliamentary terms 8 to 10. First, I created a dataset of women by term and political group only, and then in the final version I used a triple loop over parliamentary term, country, and political group. This produced the most detailed version of the women’s dataset. The use of nested loops allowed me to reconstruct country and political-group information even when these variables were not consistently returned in the API output itself. Because this large number of requests put pressure on the API, I inserted short pauses with `Sys.sleep()` between requests. (Promt15-23 ChatGPT)
+
+```{r}
+#| eval: false
+terms <- 8:10
+
+countries <- c(
+  "BE","BG","CZ","DK","DE","EE","IE","EL","ES","FR","HR","IT",
+  "CY","LV","LT","LU","HU","MT","NL","AT","PL","PT","RO","SI",
+  "SK","FI","SE", "UK"
+)
+
+
+groups <- c(
+  "PPE",
+  "NI",
+  "S-D",
+  "VERTS-ALE",
+  "ECR",
+  "RENEW",
+  "THE-LEFT",
+  "ID"
+)
+
+all_women <- list()
+
+for (term in terms) {
+  for (country in countries) {
+    for (group in groups) {
+      
+      url <- paste0(
+        "https://data.europarl.europa.eu/api/v2/meps?",
+        "parliamentary-term=", term,
+        "&gender=FEMALE",
+        "&country-of-representation=", URLencode(country, reserved = TRUE),
+        "&political-group=", URLencode(group, reserved = TRUE),
+        "&limit=500"
+      )
+      
+      response <- GET(
+        url,
+        add_headers(
+          "User-Agent" = "mep-project-research-4.5.0",
+          "Accept" = "application/ld+json"
+        )
+      )
+      
+      cat("term:", term,
+          "| country:", country,
+          "| group:", group,
+          "| status:", status_code(response), "\n")
+      
+      if (status_code(response) != 200) next
+      
+      txt <- content(response, as = "text", encoding = "UTF-8")
+      if (nchar(txt) == 0) next
+      
+      parsed <- tryCatch(
+        fromJSON(txt, flatten = TRUE),
+        error = function(e) NULL
+      )
+      
+      if (is.null(parsed)) next
+      if (is.null(parsed$data)) next
+      if (length(parsed$data) == 0) next
+      
+      df <- as.data.frame(parsed$data)
+      if (nrow(df) == 0) next
+      
+      df$country <- country
+      df$political_group <- group
+      df$gender <- "FEMALE"
+      df$parliamentary_term <- term
+      
+      all_women[[paste(term, country, group, sep = "_")]] <- df
+      
+      Sys.sleep(0.2)
+    }
+  }
+}
+
+
+women_df <- bind_rows(all_women)
+glimpse(women_df)
+#write_csv(women_df, "data_raw/meps_women_terms_8_10_country_group.csv")
+```
+
+I then repeated the same process for male MEPs. The male data collection used the same structure as the final women’s loop, but included additional safeguards against timeouts. Here I wrapped the `GET()` request itself inside `tryCatch()` and added an explicit `timeout(60)` argument. This ensured that the loop would continue even if some requests failed or the API became temporarily slow. After the loop finished, I combined the male subsets into one data frame and exported the result. (Promt 24 ChatGPT)
+
+```{r}
+#| eval: false
+terms <- 8:10
+
+countries <- c(
+  "BE","BG","CZ","DK","DE","EE","IE","EL","ES","FR","HR","IT",
+  "CY","LV","LT","LU","HU","MT","NL","AT","PL","PT","RO","SI",
+  "SK","FI","SE", "UK"
+)
+
+
+groups <- c(
+  "PPE",
+  "NI",
+  "S-D",
+  "VERTS-ALE",
+  "ECR",
+  "RENEW",
+  "THE-LEFT",
+  "ID"
+)
+
+all_men <- list()
+
+for (term in terms) {
+  for (country in countries) {
+    for (group in groups) {
+      
+      url <- paste0(
+        "https://data.europarl.europa.eu/api/v2/meps?",
+        "parliamentary-term=", term,
+        "&gender=MALE",
+        "&country-of-representation=", URLencode(country, reserved = TRUE),
+        "&political-group=", URLencode(group, reserved = TRUE),
+        "&limit=500"
+      )
+      
+      response <- tryCatch(
+        GET(
+          url,
+          add_headers(
+            "User-Agent" = "mep-project-research-4.5.0",
+            "Accept" = "application/ld+json"
+          ),
+          timeout(60)
+        ),
+        error = function(e) {
+          cat("Request failed:",
+              "term =", term,
+              "| country =", country,
+              "| group =", group, "\n")
+          return(NULL)
+        }
+      )
+      
+      if (is.null(response)) next
+      
+      cat("term:", term,
+          "| country:", country,
+          "| group:", group,
+          "| status:", status_code(response), "\n")
+      
+      if (status_code(response) != 200) next
+      
+      txt <- content(response, as = "text", encoding = "UTF-8")
+      if (nchar(txt) == 0) next
+      
+      parsed <- tryCatch(
+        fromJSON(txt, flatten = TRUE),
+        error = function(e) NULL
+      )
+      
+      if (is.null(parsed)) next
+      if (is.null(parsed$data)) next
+      if (length(parsed$data) == 0) next
+      
+      df <- as.data.frame(parsed$data)
+      if (nrow(df) == 0) next
+      
+      df$country <- country
+      df$political_group <- group
+      df$gender <- "MALE"
+      df$parliamentary_term <- term
+      
+      all_men[[paste(term, country, group, sep = "_")]] <- df
+      
+      Sys.sleep(0.5)
+    }
+  }
+}
+
+men_df <- bind_rows(all_men)
+glimpse(men_df)
+#write_csv(men_df, "data_raw/meps_men_terms_8_10_country_group.csv")
+
+```
+
+In the next step, I merged the female and male datasets into one combined MEP dataset. This file contained the core independent variables for the analysis: gender, country, political group, and parliamentary term. It therefore served as the basis for the later productivity analysis.
+
+```{r}
+#| eval: false
+meps_df <- bind_rows(women_df, men_df)
+glimpse(meps_df)
+#write_csv(meps_df, "data_raw/meps_terms_8_10.csv")
+```
+
+Finally, I collected the dependent variable, parliamentary productivity, measured as the number of plenary speeches per MEP. For this, I used the `/speeches` endpoint of the API. Starting from the preprocessed MEP dataset, I looped over all observations and extracted each person’s identifier and parliamentary term. For each MEP-term combination, I sent a request to the speeches endpoint with the parameters `person-id`, `parliamentary-term`, and `activity-type=PLENARY_DEBATE_SPEECH`. If the API returned status code `204`, this meant that the MEP had delivered no speeches in that term, and I explicitly recorded a value of zero. If the request was successful, I parsed the returned JSON and counted the number of rows in the resulting data frame. This row count corresponds to the number of plenary speeches delivered by that MEP in that parliamentary term. Each count was stored together with the MEP identifier and term, and the final speech counts were combined into a separate dataset and saved as a CSV file. (Promt 25-29 ChatGPT)
+
+```{r}
+#| eval: false
+speech_counts <- list()
+
+for (i in 1:nrow(meps_preprocessed)) {
+  
+  person_id <- meps_preprocessed$identifier[i]
+  term <- meps_preprocessed$parliamentary_term[i]
+  
+  url <- paste0(
+    "https://data.europarl.europa.eu/api/v2/speeches?",
+    "person-id=", person_id,
+    "&parliamentary-term=", term,
+    "&activity-type=PLENARY_DEBATE_SPEECH",
+    "&limit=500"
+  )
+  
+  response <- tryCatch(
+    GET(
+      url,
+      add_headers(
+        "User-Agent" = "mep-project-research-4.5.0",
+        "Accept" = "application/ld+json"
+      ),
+      timeout(60)
+    ),
+    error = function(e) NULL
+  )
+  
+  if (is.null(response)) next
+  
+  cat("i:", i,
+      "| person:", person_id,
+      "| term:", term,
+      "| status:", status_code(response), "\n")
+  
+  if (status_code(response) == 204) {
+    speech_counts[[i]] <- data.frame(
+      identifier = person_id,
+      parliamentary_term = term,
+      speeches = 0
+    )
+    next
+  }
+  
+  if (status_code(response) != 200) next
+  
+  txt <- content(response, as = "text", encoding = "UTF-8")
+  if (nchar(txt) == 0) next
+  
+  parsed <- tryCatch(
+    fromJSON(txt, flatten = TRUE),
+    error = function(e) NULL
+  )
+  
+  if (is.null(parsed) || is.null(parsed$data)) {
+    n_speeches <- 0
+  } else {
+    df <- as.data.frame(parsed$data)
+    n_speeches <- nrow(df)
+  }
+  
+  speech_counts[[i]] <- data.frame(
+    identifier = person_id,
+    parliamentary_term = term,
+    speeches = n_speeches
+  )
+  
+  Sys.sleep(0.2)
+}
+
+speech_counts_df <- bind_rows(speech_counts)
+#write_csv(speech_counts_df, "data_raw/speech_counts_terms_9_10.csv")
+```
+
+## Data Cleaning
+
+First, the dataset containing information on Members of the European Parliament (MEPs) was imported and reduced to the variables relevant for the analysis, including identifier, name, country, political group, gender, and parliamentary term. The given and family names were combined into a single name variable, and duplicate observations were removed.
+
+In a second step, the dataset containing the number of speeches per MEP was imported and merged with the MEP dataset using the unique identifier and parliamentary term.
+
+The gender variable was then recoded into a binary variable (1 = male, 0 = female). Finally, the dependent variable measuring parliamentary productivity was created as the number of speeches delivered by each MEP, and additional variables such as the parliamentary term were prepared for the regression analysis. The resulting cleaned dataset was saved for further analysis. It can be found on gitHub in the folder 02-data_preprocessed and is called *meps_productivity.csv*.
 
 ## Method
 
-To analyse the determinants of parliamentary productivity, this study employs a quantitative regression analysis using data on Members of the European Parliament (MEPs). Parliamentary productivity is measured as the number of speeches delivered by each MEP in plenary debates, which serves as the dependent variable. Speeches represent a visible form of legislative participation and capture how actively legislators engage in parliamentary debates. The main independent variables are gender and political group affiliation, which capture individual and political characteristics of legislators. Additional control variables include country of representation and parliamentary term. The empirical model is estimated using a linear regression framework:
+To analyse the determinants of parliamentary productivity, my project employs a quantitative regression analysis using data on Members of the European Parliament. Parliamentary productivity is measured as the number of speeches delivered by each MEP in plenary debates, which serves as the dependent variable. Speeches represent a visible form of legislative participation and capture how actively legislators engage in parliamentary debates. The main independent variables are gender and political group affiliation, which capture individual and political characteristics of legislators. Additional control variables include country of representation and parliamentary term. The empirical model is estimated using a linear regression framework:
 
 \
 $\text{Productivity}_i = \beta_0 + \beta_1 \text{Gender}_i + \beta_2 \text{PoliticalGroup}_i + \beta_3 \text{Country}_i + \beta_4 \text{Term}_i + \epsilon_i$
 
-The regression estimates how these factors are associated with variation in parliamentary activity among MEPs. (here I used ChatGPT to get the Latex in my Quarto)
+In addition to the baseline model, a second specification includes country and political group fixed effects to control for unobserved heterogeneity across countries and party groups. These fixed effects account for structural differences in parliamentary behaviour that may arise from national political contexts or party group dynamics. The fixed-effects specification therefore controls for systematic differences across countries and party groups while estimating the relationship between gender, parliamentary term, and legislative productivity. (I used ChatGPT to get the Latex in my Quarto)
 
 ## Results
 
+### Regression Model 1
+
 ```{r}
-1 + 1
+#| message: false
+library(tidyverse)
+meps_productivity <- read_csv("meps_productivity.csv")
+model <- lm(
+  productivity ~ gender + political_group + country + term,
+  data = meps_productivity
+)
+
+summary(model)
 ```
+
+The OLS regression results show no statistically significant relationship between gender and parliamentary productivity, indicating that male and female Members of the European Parliament do not differ systematically in the number of speeches they deliver. In contrast, the parliamentary term is strongly and positively associated with productivity (β = 18.52, p \< 0.001), suggesting that MEPs in later terms tend to participate more actively in plenary debates. Differences across political groups are also observed, with members of the PPE group delivering significantly fewer speeches and members of the Left group delivering significantly more speeches relative to the reference political group. Overall, the model explains a moderate share of the variation in parliamentary productivity (R² = 0.17).
+
+### Regression Model 2
+
+```{r}
+model_fe <- lm(
+  productivity ~ gender + term + factor(political_group) + factor(country),
+  data = meps_productivity
+)
+
+summary(model_fe)
+```
+
+The fixed-effects regression including country and political group controls yields similar results to the baseline model. Gender is not statistically associated with parliamentary productivity, indicating no systematic difference in the number of speeches delivered by male and female MEPs. In contrast, the parliamentary term remains strongly and positively related to productivity (β = 18.52, p \< 0.001), suggesting that legislators in later terms participate more actively in plenary debates. Differences across political groups persist: members of the PPE group deliver significantly fewer speeches, while members of the Left group deliver significantly more speeches compared to the reference group. Controlling for country fixed effects accounts for structural differences across national delegations. Overall, the model explains approximately 16.6% of the variation in parliamentary productivity (R² = 0.166). The results are visible in the following coefficient plot:
+
+```{r}
+#| message: false
+library(ggplot2)
+library(broom)
+coefplot <- tidy(model_fe) |> 
+  ggplot(aes(x = estimate, y = term)) +
+  geom_point() +
+  geom_errorbarh(aes(xmin = estimate - 1.96 * std.error,
+                     xmax = estimate + 1.96 * std.error)) +
+  labs(
+    x = "Coefficient Estimate",
+    y = "",
+    title = "Regression Coefficients"
+  ) +
+  theme_bw()
+
+coefplot
+```
+
+### Figure: Parliamentary Productivity by Gender
+
+The distribution of speeches among male and female MEPs appears broadly similar. Although female MEPs show a slightly higher median number of speeches, the overall distributions overlap substantially. This visual pattern is consistent with the regression results, which indicate that gender is not a statistically significant predictor of parliamentary productivity. (used ChatGPT to silence the warnings)
+
+```{r}
+plot_gender <- ggplot(meps_productivity, aes(x = factor(gender), y = productivity)) +
+  geom_boxplot() +
+  labs(
+    x = "Gender (0 = Female, 1 = Male)",
+    y = "Number of Speeches",
+    title = "Parliamentary Productivity by Gender"
+  ) +
+  theme_bw()
+suppressWarnings(print(plot_gender))
+```
+
+### Figure: Parliamentary Productivity by Political Group
+
+Productivity varies noticeably across political groups. Members of the Left group display higher median speech counts, while members of the PPE group appear to deliver fewer speeches on average. These patterns correspond to the regression results, which show that members of the Left group are significantly more active in plenary debates, whereas members of the PPE group tend to deliver significantly fewer speeches relative to the reference group.
+
+```{r}
+plot_groups <- ggplot(meps_productivity, aes(x = political_group, y = productivity)) +
+  geom_boxplot() +
+  labs(
+    x = "Political Group",
+    y = "Number of Speeches",
+    title = "Parliamentary Productivity by Political Group"
+  ) +
+  theme_bw()
+suppressWarnings(print(plot_groups))
+```
+
+### Figure: Parliamentary Productivity Across Parliamentary Terms
+
+The figure shows a positive relationship between parliamentary term and the number of speeches delivered. The upward-sloping regression line indicates that MEPs in later parliamentary terms tend to be more active in plenary debates. This visual trend supports the regression findings, which identify parliamentary term as a strong and statistically significant predictor of legislative productivity.
+
+```{r}
+plot_terms <- ggplot(meps_productivity, aes(x = term, y = productivity)) +
+  geom_point(alpha = 0.4) +
+  geom_smooth(method = "lm") +
+  labs(
+    x = "Parliamentary Term",
+    y = "Number of Speeches",
+    title = "Parliamentary Productivity Across Terms"
+  ) +
+  theme_bw()
+suppressWarnings(print(plot_terms))
+
+```
+
+Overall, the descriptive visualisations and regression results point to similar conclusions. Gender does not appear to play a significant role in explaining differences in parliamentary productivity, as male and female MEPs deliver a comparable number of speeches. In contrast, institutional and political factors seem more relevant. Parliamentary term is associated with higher productivity, suggesting that legislators become more active in plenary debates over time. In addition, productivity differs across political groups, indicating that party group dynamics may shape how actively MEPs participate in parliamentary debates.
 
 ## Discussion
 
-When you click the **Render** button a document will be generated that includes both content and the output of embedded code. You can embed code like this:
+This project aimed to explain variation in parliamentary productivity among Members of the European Parliament (MEPs) using speeches as a measurable indicator of legislative activity. The analysis shows that gender does not have a statistically significant effect on the number of speeches delivered by MEPs, while parliamentary term and political group membership appear to play a more important role in explaining variation in productivity. These results suggest that institutional and political factors may structure parliamentary participation more strongly than individual characteristics such as gender.
 
-```{r}
-1 + 1
-```
+However, several limitations should be considered when interpreting these findings. First, the analysis relies only on speeches as a measure of parliamentary productivity. Ideally, other forms of legislative activity such as parliamentary questions, reports, or motions would also be included to capture a broader concept of legislative behaviour. During the data collection process, it proved difficult to retrieve these variables from the API in a consistent way and connecting them to the MEPs, which prevented their inclusion in the final dataset. Second, speech data were only available for parliamentary terms 9 and 10, which limited the temporal scope of the analysis and prevented a longer-term comparison across multiple legislative periods.
+
+Another important aspect of this project concerns the data collection process itself. Writing the API loops required to retrieve the data was technically challenging, and I relied heavily on ChatGPT to help structure and debug the loops. At the same time, working with these scripts allowed me to gain a deeper understanding of how API-based data collection works. The final loops are flexible and could easily be extended to retrieve additional variables or larger datasets from the European Parliament API in future research. Which I am interested to follow further.
+
+Despite these limitations, my project demonstrates that automated data collection from open parliamentary data sources can be used to construct reproducible datasets for analysing legislative behaviour in the European Parliament.
+
+## Sources
+
+-   European Parliament. (2024). *European Parliament Open Data Portal and API*.\
+    <https://data.europarl.europa.eu/api/v2>
+
+-   Bäck, H., Debus, M., & Müller, J. (2014). Who takes the parliamentary floor? The role of gender in speech-making in the Swedish Riksdag. *Political Research Quarterly*, 67(3), 504–518.
+
+-   Euchner, E.-M., Heuff, J., & Schlipphak, B. (2020). Candidate selection and parliamentary activity in the European Union’s multi-level system. *Journal of European Public Policy*, 27(1), 66–86.
+
+-   Kathlene, L. (1994). Power and influence in state legislative policymaking: The interaction of gender and position in committee hearing debates. *American Political Science Review*, 88(3), 560–576.
+
+-   Kantola, J., & Rolandsen Agustín, L. (2019). Gendering the representative work of the European Parliament: A political analysis of women MEP’s perceptions of gender equality in party groups. *Journal of Common Market Studies*, 57(4), 768–786.
+
+-   Proksch, S.-O., & Slapin, J. B. (2010). Position taking in European Parliament speeches. *British Journal of Political Science*, 40(3), 587–611.
+
+-   Sorace, M. (2018). *Legislative participation in the European Parliament*. London: London School of Economics and Political Science.
